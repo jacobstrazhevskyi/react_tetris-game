@@ -1,7 +1,11 @@
 import React from 'react';
 
+import { Tetris } from '../Tetris';
+
+import '../../reset.css';
+
 const App: React.FC = () => (
-  123
+  <Tetris />
 );
 
 export default App;
