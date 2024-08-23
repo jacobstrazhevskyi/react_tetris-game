@@ -1,8 +1,9 @@
-type TetrominoShape = (string | number)[][];
+ type TetrominoShape = (string | number)[][];
 
-interface Tetromino {
+export interface Tetromino {
   shape: TetrominoShape;
   color: string;
+  length?: number,
 }
 
 export type TetrominoName = 0 | 'I' | 'J' | 'L' | 'O' | 'S' | 'T' | 'Z';
