@@ -18,28 +18,24 @@ export const useStage = (player: Player, resetPlayer: ResetPlayer) => {
   const [rowsCleared, setRowsCleared] = useState(0);
 
   useEffect(() => {
-    setRowsCleared(0);
-
     const sweepRows = (stage) => {
       let newStage = [...stage];
-      let rowsCleared = 0;
+      let clearedRows = 0;
 
       for (let y = 0; y < newStage.length; y++) {
         if (newStage[y].every(cell => cell[0] !== 0)) {
-          rowsCleared += 1;
+          clearedRows += 1;
           newStage.splice(y, 1);
           newStage.unshift(new Array(newStage[0].length).fill([0, 'clear']));
-          y -= 1;
         }
       }
 
-      setRowsCleared(prev => prev + rowsCleared);
+      setRowsCleared(prev => prev + clearedRows);
 
       return newStage;
     };
 
     const updateStage = (prevStage) => {
-      console.log('stage');
       const newStage = prevStage.map(row => (
         row.map(cell => (cell[1] === 'clear' ? [0, 'clear'] : cell))
       ));
@@ -64,7 +60,8 @@ export const useStage = (player: Player, resetPlayer: ResetPlayer) => {
     };
 
     setStage(prev => updateStage(prev));
+    setRowsCleared(0);
   }, [player, resetPlayer, rowsCleared]);
 
-  return [stage, setStage];
+  return [stage, setStage, rowsCleared];
 };
