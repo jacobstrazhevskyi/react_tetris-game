@@ -5,6 +5,7 @@ import { Display } from '../Display';
 import { StartButton } from '../StartButton';
 import { usePlayer } from '../../utils/hooks/usePlayer';
 import { useStage } from '../../utils/hooks/useStage';
+import { checkCollision, createStage } from '../../utils/gameHelpers';
 
 const StyledBox = styled(Box)({
   width: '100vw',
@@ -32,13 +33,73 @@ export const Tetris: React.FC = () => {
   const [dropTime, setDropTime] = useState(null);
   const [gameOver, setGameOver] = useState(false);
 
-  const [player] = usePlayer();
-  const [stage, setStage] = useStage(player);
+  const [player, updatePlayerPosition, resetPlayer, playerRotate] = usePlayer();
+  const [stage, setStage] = useStage(player, resetPlayer);
 
-  console.log('rerender');
+  // console.log(player);
+  // console.log(stage);
+
+  const movePlayer = (direction: number) => {
+    // console.log('move');
+    if (checkCollision(player, stage, { x: direction, y: 0 })) {
+      return;
+    }
+
+    updatePlayerPosition({ x: direction, y: 0 });
+  };
+
+  const startGame = () => {
+    setStage(createStage());
+    resetPlayer();
+    setGameOver(false);
+  };
+
+  const drop = () => {
+    if (!checkCollision(player, stage, { x: 0, y: 1 })) {
+      updatePlayerPosition({ x: 0, y: 1, collided: false });
+    } else {
+      if (player.position.y < 1) {
+        console.log('GAME OVER!!!');
+        setGameOver(true);
+        setDropTime(null);
+      }
+      updatePlayerPosition({ x: 0, y: 0, collided: true });
+      console.log('collided');
+    }
+  };
+
+  const dropPlayer = () => {
+    drop();
+  };
+
+  const move = ({ keyCode }) => {
+    if (gameOver) {
+      return;
+    }
+
+    if (keyCode === 37) {
+      movePlayer(-1);
+    }
+
+    if (keyCode === 39) {
+      movePlayer(1);
+    }
+
+    if (keyCode === 40) {
+      dropPlayer();
+    }
+
+    if (keyCode === 38) {
+      playerRotate(stage, 1);
+    }
+  };
 
   return (
-    <StyledBox>
+    <StyledBox
+      role="button"
+      tabIndex={0}
+      onKeyDown={event => move(event)}
+    >
       <StyledTetrisWrapper>
         <Stage
           stage={stage}
@@ -53,7 +114,9 @@ export const Tetris: React.FC = () => {
               <Display gameOver={gameOver} text="Level" />
             </Box>
           )}
-          <StartButton callback={() => { }} />
+          <StartButton
+            callback={startGame}
+          />
         </StyledDisplayBox>
       </StyledTetrisWrapper>
     </StyledBox>
