@@ -21,24 +21,19 @@ export const useStage = (player: Player, resetPlayer: ResetPlayer) => {
     setRowsCleared(0);
 
     const sweepRows = (stage) => {
-      let newStage = [...stage]; // Копируем текущее состояние игрового поля
-      let rowsCleared = 0; // Счётчик очищенных строк
+      let newStage = [...stage];
+      let rowsCleared = 0;
 
       for (let y = 0; y < newStage.length; y++) {
-        // Проверяем, есть ли пустые клетки в строке
         if (newStage[y].every(cell => cell[0] !== 0)) {
-          // Если нет пустых клеток, значит строка полностью заполнена
           rowsCleared += 1;
-          // Удаляем заполненную строку
           newStage.splice(y, 1);
-          // Добавляем новую пустую строку в начало поля
           newStage.unshift(new Array(newStage[0].length).fill([0, 'clear']));
-          // Уменьшаем `y`, чтобы не пропустить следующую строку
           y -= 1;
         }
       }
 
-      setRowsCleared(prev => prev + rowsCleared);  // Обновляем счётчик очищенных строк
+      setRowsCleared(prev => prev + rowsCleared);
 
       return newStage;
     };
