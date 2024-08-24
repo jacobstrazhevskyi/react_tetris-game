@@ -39,16 +39,12 @@ export const Tetris: React.FC = () => {
   const [stage, setStage, rowsCleared] = useStage(player, resetPlayer);
   const [score, setScore, rows, setRows, level, setLevel] = useGameStatus(rowsCleared);
 
-  // console.log(player);
-  // console.log(stage);
-
   const movePlayer = (direction: number) => {
-    // console.log('move');
     if (checkCollision(player, stage, { x: direction, y: 0 })) {
       return;
     }
 
-    updatePlayerPosition({ x: direction, y: 0 });
+    updatePlayerPosition({ x: direction, y: 0, collided: false });
   };
 
   const startGame = () => {
@@ -63,7 +59,6 @@ export const Tetris: React.FC = () => {
 
   const drop = () => {
     if (rows > (level + 1) * 10) {
-      console.log('yessss');
       setLevel(prev => prev + 1);
       setDropTime(1000 / (level + 1) + 200);
     }
@@ -80,7 +75,7 @@ export const Tetris: React.FC = () => {
     }
   };
 
-  const keyUp = ({ keyCode }) => {
+  const keyUp = ({ keyCode }: { keyCode: number }) => {
     if (!gameOver) {
       if (keyCode === 40) {
         setDropTime(1000);
@@ -93,7 +88,7 @@ export const Tetris: React.FC = () => {
     drop();
   };
 
-  const move = ({ keyCode }) => {
+  const move = ({ keyCode }: { keyCode: number }) => {
     if (gameOver) {
       return;
     }

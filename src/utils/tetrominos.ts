@@ -1,4 +1,4 @@
- type TetrominoShape = (string | number)[][];
+export type TetrominoShape = (string | number)[][];
 
 export interface Tetromino {
   shape: TetrominoShape;

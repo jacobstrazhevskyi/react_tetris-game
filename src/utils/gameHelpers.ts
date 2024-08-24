@@ -1,20 +1,8 @@
-import { Tetromino } from './tetrominos';
+import { Player } from '../types/Player';
+import { Stage } from '../types/Stage';
 
 export const STAGE_WIDTH = 12;
 export const STAGE_HEIGHT = 20;
-
-type Player = {
-  position: {
-    x: number,
-    y: number,
-  },
-  tetromino: Tetromino,
-  collided: boolean,
-};
-
-type Cell = [number, string];
-
-type Stage = Cell[][];
 
 type CoordinatesProps = {
   x: number,

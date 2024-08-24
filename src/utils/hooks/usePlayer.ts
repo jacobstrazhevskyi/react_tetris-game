@@ -1,8 +1,11 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable no-return-assign */
 /* eslint-disable no-param-reassign */
 import { useCallback, useState } from 'react';
-import { getRandomTetromino, TETROMINOS } from '../tetrominos';
+import { getRandomTetromino, TETROMINOS, TetrominoShape } from '../tetrominos';
 import { checkCollision, STAGE_WIDTH } from '../gameHelpers';
+import { Stage } from '../../types/Stage';
+import { Player } from '../../types/Player';
 
 type UpdatePlayerPositionProps = {
   x: number,
@@ -10,14 +13,21 @@ type UpdatePlayerPositionProps = {
   collided: boolean,
 };
 
-export const usePlayer = () => {
+type ReturnFromUsePlayer = [
+  Player,
+  ({ x, y, collided }: UpdatePlayerPositionProps) => void,
+  () => void,
+  (stage: Stage, direction: number) => void,
+];
+
+export const usePlayer: () => ReturnFromUsePlayer = () => {
   const [player, setPlayer] = useState({
     position: { x: 0, y: 0 },
     tetromino: TETROMINOS[0].shape,
     collided: false,
   });
 
-  const rotate = (matrix, direction) => {
+  const rotate = (matrix: TetrominoShape, direction: number) => {
     const rotatedTetro = matrix.map((_, index) => (
       matrix.map(column => column[index])
     ));
@@ -29,7 +39,7 @@ export const usePlayer = () => {
     return rotatedTetro.reverse();
   };
 
-  const playerRotate = (stage, direction) => {
+  const playerRotate = (stage: Stage, direction: number) => {
     const playerCopy = JSON.parse(JSON.stringify(player));
     playerCopy.tetromino = rotate(playerCopy.tetromino, direction);
 

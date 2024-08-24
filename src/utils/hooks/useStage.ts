@@ -1,25 +1,30 @@
-import { useEffect, useState } from 'react';
-import { createStage } from '../gameHelpers';
-import { Tetromino } from '../tetrominos';
+import {
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useState,
+} from 'react';
 
-type Player = {
-  position: {
-    x: number,
-    y: number,
-  },
-  tetromino: Tetromino,
-  collided: boolean,
-};
+import { createStage } from '../gameHelpers';
+
+import { Player } from '../../types/Player';
+import { Stage } from '../../types/Stage';
 
 type ResetPlayer = () => void;
 
-export const useStage = (player: Player, resetPlayer: ResetPlayer) => {
+type ReturnFromUseStage = [
+  Stage,
+  Dispatch<SetStateAction<Stage>>,
+  number,
+];
+
+export const useStage = (player: Player, resetPlayer: ResetPlayer): ReturnFromUseStage => {
   const [stage, setStage] = useState(createStage());
   const [rowsCleared, setRowsCleared] = useState(0);
 
   useEffect(() => {
-    const sweepRows = (stage) => {
-      let newStage = [...stage];
+    const sweepRows = (stageToSweep: Stage) => {
+      const newStage = [...stageToSweep];
       let clearedRows = 0;
 
       for (let y = 0; y < newStage.length; y++) {
@@ -35,7 +40,7 @@ export const useStage = (player: Player, resetPlayer: ResetPlayer) => {
       return newStage;
     };
 
-    const updateStage = (prevStage) => {
+    const updateStage = (prevStage: Stage) => {
       const newStage = prevStage.map(row => (
         row.map(cell => (cell[1] === 'clear' ? [0, 'clear'] : cell))
       ));

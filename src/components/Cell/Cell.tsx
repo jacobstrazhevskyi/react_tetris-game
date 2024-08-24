@@ -4,17 +4,17 @@ import { Box, styled } from '@mui/material';
 import { TetrominoName, TETROMINOS } from '../../utils/tetrominos';
 
 type Props = {
-  type: TetrominoName,
+  type: TetrominoName | 0,
 };
 
-type CellProps = {
+type StyledCellProps = {
   type: TetrominoName,
   color: string,
 };
 
 const StyledCell = styled(Box, {
   shouldForwardProp: (prop) => prop !== 'type' && prop !== 'color',
-})<CellProps>(({ type, color }) => ({
+})<StyledCellProps>(({ type, color }) => ({
   width: 'auto',
   backgroundColor: `rgba(${color}, 0.8)`,
   border: `${type === 0 ? '0px solid' : '4px solid'}`,

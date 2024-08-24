@@ -1,14 +1,28 @@
-import { useState, useEffect, useCallback } from 'react';
+import {
+  useState,
+  useEffect,
+  useCallback,
+  SetStateAction,
+  Dispatch,
+} from 'react';
 
-export const useGameStatus = (rowsCleared) => {
+type SetterInUseState = Dispatch<SetStateAction<number>>;
+
+type ReturnFromUseGameStatus = [
+  number,
+  SetterInUseState,
+  number,
+  SetterInUseState,
+  number,
+  SetterInUseState,
+];
+
+export const useGameStatus = (rowsCleared: number): ReturnFromUseGameStatus => {
   const [score, setScore] = useState(0);
   const [rows, setRows] = useState(0);
   const [level, setLevel] = useState(0);
 
   const linePoints = [40, 100, 300, 1200];
-
-  console.log({score, level, rows});
-  console.log(rowsCleared);
 
   const calcScore = useCallback(() => {
     if (rowsCleared > 0) {
